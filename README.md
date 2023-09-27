@@ -35,7 +35,7 @@ To run WorldXplorer locally on your machine, follow these steps:
 
 ```bash
 # Clone the repository
-git clone 
+git clone https://github.com/ManyamSanjayKumarReddy/Travel-Accomodations-Selection-Service-Provider.git
 
 # Change directory to the project folder
 cd worldxplorer
