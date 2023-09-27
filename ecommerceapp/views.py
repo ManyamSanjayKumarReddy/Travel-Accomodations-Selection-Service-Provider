@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import RatingForm
 from django.db.models import Avg
 from django.shortcuts import redirect
-
+from datetime import datetime
 
 # Create your views here.
 def index(request):
@@ -210,7 +210,33 @@ def delete_booking(request, order_id):
         else:
             messages.error(request, 'You do not have permission to delete this booking.')
 
-    return redirect('/')
+    return redirect('/auth/profile/')
 
 
+
+# In your ecommerceapp/views.py
+
+def update_appointment_date(request, order_id):
+    if request.method == 'POST':
+        # Fetch the order based on order_id
+        order = get_object_or_404(Orders, order_id=order_id)
+
+        # Check if the order belongs to the current user (optional, for security)
+        if order.email == request.user.email:
+            # Get the appointment date from the form
+            appointment_date_str = request.POST.get('appointment_date')
+
+            # Convert the date to the correct format (YYYY-MM-DD)
+            try:
+                appointment_date = datetime.strptime(appointment_date_str, '%Y-%m-%d').date()
+                order.appointment_date = appointment_date
+                order.updated_appointment_date = appointment_date  # Update the updated_appointment_date field
+                order.save()
+                messages.success(request, 'Appointment date set successfully.')
+            except ValueError:
+                messages.error(request, 'Invalid date format. Please use YYYY-MM-DD format.')
+        else:
+            messages.error(request, 'You do not have permission to set the appointment date.')
+
+    return redirect('/auth/profile/')
 

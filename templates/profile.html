@@ -3,6 +3,22 @@
 
 {% block body %}
 <section id="profile" class="container mt-5">
+
+    {% for message in messages %}
+
+    <div
+      class="alert alert-{{message.tags}} alert-dismissible fade show"
+      role="alert"
+    >
+      <strong>{{message}}</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %}
     <div class="card">
         <div class="card-header">
             <h2 class="mb-0">User Profile Information</h2>
@@ -22,37 +38,58 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Booking ID</th>
-                            <th>Amount</th>
-                            <th>Bookings</th>
-                            <th>Address</th>
-                           
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in user_orders %}
-                        <tr>
-                            <td>{{ order.order_id }}</td>
-                            <td>	₹{{ order.amount }}</td>
-                            <td>
-                                <pre>{{ order.items_json|safe }}</pre>
-                            </td>
-                            <td> {{ order.city }}, {{ order.state }}, {{ order.zip_code }}</td>
-                            
-                            <td>
-                                <form method="post" action="{% url 'delete_booking' order.order_id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+               <!-- ... (previous code) ... -->
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Amount</th>
+            <th>Bookings</th>
+            <th>Address</th>
+            <th>Date</th>
+            <th>Updated Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in user_orders %}
+        <tr>
+            <td>{{ order.order_id }}</td>
+            <td>₹{{ order.amount }}</td>
+            <td>
+                <pre>{{ order.items_json|safe }}</pre>
+            </td>
+            <td> {{ order.city }}, {{ order.state }}, {{ order.zip_code }}</td>
+            <td>
+                <form method="post" action="{% url 'update_appointment_date' order.order_id %}">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column align-items-start"> <!-- Use Bootstrap class for column layout and alignment -->
+                        <input type="date" name="appointment_date" value="{{ order.appointment_date|date:'Y-m-d' }}" class="mb-2"> <!-- Add margin-bottom for spacing -->
+                        <button type="submit" class="btn btn-primary">Update Date</button>
+                    </div>
+                </form>
+            </td>
+            <td>
+                <!-- Display the updated date here (initially empty) -->
+                {% if order.updated_appointment_date %}
+                {{ order.updated_appointment_date|date:'Y-m-d' }}
+                {% endif %}
+            </td>
+            <td>
+                <form method="post" action="{% url 'delete_booking' order.order_id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+           
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- ... (remaining code) ... -->
+
             </div>
         </div>
     </div>

@@ -9,6 +9,7 @@ urlpatterns = [
     path('handlerequest/', views.handlerequest, name="HandleRequest"),
     path('room/<int:room_id>/', views.room_detail, name='room_detail'),
     path('delete_booking/<int:order_id>/', views.delete_booking, name='delete_booking'),
+     path('update_appointment_date/<int:order_id>/', views.update_appointment_date, name='update_appointment_date'),
     
 
 ]
