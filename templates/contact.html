@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us{% endblock title %}
+{% block content %}
+
+
+
+<section id="hero">
+  <div class="hero-container">
+    <h3>Welcome to <strong>WorldXplorer</strong></h3>
+    <h1>Explore the world with WorldXplorer</h1>
+    <h2>Dear, {{user.username}} WorldXplorer Welcomes you ... </h2>
+    <a href="" class="btn-get-started scrollto">Browse Now</a>
+  </div>
+</section>
+
+{% endblock content %} 
+{% block body %}
+
+<div class="container mt-5">
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+
+    <h1 class="text-center">Contact Us</h1>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <form action="/contact" method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{user.email}}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="desc" class="form-label">How Can We Help You?</label>
+                    <textarea class="form-control" id="desc" name="desc" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="pnumber" class="form-label">Phone Number</label>
+                    <input type="number" class="form-control" id="pnumber" name="pnumber" required>
+                </div>
+
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock body %}

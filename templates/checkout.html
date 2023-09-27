@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block title %}
+Check Out
+{% endblock title %} 
+{% block content %}
+
+
+
+<section id="hero">
+  <div class="hero-container">
+    <h3>Welcome to <strong>WorldXplorer</strong></h3>
+    <h1>Explore the world with WorldXplorer</h1>
+    <h2>Dear, {{user.username}} WorldXplorer Welcomes you ... </h2>
+    <a href="" class="btn-get-started scrollto">Browse Now</a>
+  </div>
+</section>
+
+{% endblock content %} 
+{% block body %} 
+{% load static %}
+
+<!-- ======= Portfolio Section ======= -->
+<section id="portfolio" class="portfolio">
+  <div class="container">
+    {% for message in messages %}
+
+    <div
+      class="alert alert-{{message.tags}} alert-dismissible fade show"
+      role="alert"
+    >
+      <strong>{{message}}</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %}
+
+    <div class="section-title">
+      <h2>#1 Startup of the Year</h2>
+      <h3>Checkout Page </h3>
+    </div>
+
+       
+       
+       <div class="container">
+           <div class="col my-4">
+               <h2>Step 1 - My Awesome Cart Express Checkout - Review Your Booking Details</h2>
+               <div class="my-4">
+                   <ul class="list-group" id="items">
+
+
+                   </ul>
+
+                   <nav aria-label="breadcrumb">
+         <ol class="breadcrumb mt-3">
+           <li class="breadcrumb-item active" aria-current="page">Your Cart Total Is <b>Rs. <span id="totalprice"></span> <span id="amount"></span></b>. Enter your details below & Conform your Booking. Thanks for using WorldXplorer Accomodations Site</li>
+           <li</li>
+         </ol>
+       </nav>
+       
+               </div>
+           </div>
+           <div class="col my-4">
+               <h2>Step 2 - Enter Address & Other Details:</h2>
+               <form method="post" action="/checkout/">
+                {% csrf_token %}
+                <input type="hidden" name="itemsJson" id="itemsJson">
+                <input type="hidden" id="amt" name="amt">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Name:</td>
+                        <td>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your Name" required>
+                        </td>
+                        <td>Email:</td>
+                        <td>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{user.email}}" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Address Line 1:</td>
+                        <td>
+                            <input type="text" class="form-control" id="address1" name="address1" placeholder="Enter your Address Line 1" required>
+                        </td>
+                        <td>Address Line 2:</td>
+                        <td>
+                            <input type="text" class="form-control" id="address2" name="address2" placeholder="Enter your Address Line 2" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>City:</td>
+                        <td>
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Enter your City Name" required>
+                        </td>
+                        <td>State:</td>
+                        <td>
+                            <input type="text" class="form-control" id="state" name="state" placeholder="Enter your State Name" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Pin Code:</td>
+                        <td>
+                            <input type="number" class="form-control" id="zip_code" name="zip_code" required placeholder="Enter your Pin Code">
+                        </td>
+                        <td>Phone Number:</td>
+                        <td>
+                            <input type="number" class="form-control" id="phone" name="phone" required placeholder="Enter your Mobile Number">
+                        </td>
+                    </tr>
+                </table>
+                <button id="btn" type="submit" class="btn btn-success btn-sm btn-block col-md-4">Confirm Booking</button>
+            </form>
+            
+           </div>
+       </div>
+   
+ <script src="https://code.jquery.com/jquery-3.3.1.js"
+ integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+ crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+
+<script>
+if (localStorage.getItem('cart') == null) {
+   var cart = {};
+} else {
+   cart = JSON.parse(localStorage.getItem('cart'));
+}
+console.log(cart);
+
+var sum = 0;
+var totalPrice = 0;
+if ($.isEmptyObject(cart)) {
+   //if object is empty
+   mystr = `<p>Your cart is empty, please add some items to your cart before checking out!</p>`
+   $('#items').append(mystr);
+} else {
+   for (item in cart) {
+       let name = cart[item][1];
+       let qty = cart[item][0];
+       let itemPrice = cart[item][2];
+       sum = sum + qty;
+       totalPrice = totalPrice + qty* itemPrice;
+       
+       mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                   ${name}
+                   <div><b> Price : ${itemPrice}</b></div>
+                   <span class="badge badge-primary badge-pill">${qty}</span>
+               </li>`
+       $('#items').append(mystr);
+   }
+   document.getElementById('totalprice').innerHTML=totalPrice
+
+}
+document.getElementById('totalprice').innerHTML = totalPrice;
+
+$('#itemsJson').val(JSON.stringify(cart));
+
+
+
+{% if thank %}
+alert('Thanks for Booking with us. Your order is is {{id}}. Use it to track your manage your Bookings');
+localStorage.clear();
+document.location = "/";
+{% endif %}
+
+var test = `${totalPrice}`;
+document.getElementById("amt").value = test;
+</script>
+
+{% endblock body %}

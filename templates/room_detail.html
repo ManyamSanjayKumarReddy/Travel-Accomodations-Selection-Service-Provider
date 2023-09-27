@@ -1,0 +1,449 @@
+{% extends 'base.html' %}
+{% block title %} {{ room.room_name }} {% endblock title %}
+{% block content %}
+
+<section id="hero">
+  <div class="hero-container">
+    <h3>Welcome to <strong>WorldXplorer</strong></h3>
+    <h1>Explore the world with WorldXplorer</h1>
+    <h2>Dear, {{ user.username }} WorldXplorer Welcomes you ...</h2>
+    <a href="" class="btn-get-started scrollto">Browse Now</a>
+  </div>
+</section>
+{% endblock content %}
+
+{% load static %}
+
+{% block body %}
+
+
+<div class="container mt-5">
+
+    {% for message in messages %}
+
+    <div
+      class="alert alert-{{message.tags}} alert-dismissible fade show"
+      role="alert"
+    >
+      <strong>{{message}}</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %}
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="banner-image">
+                <img src="{% static 'assets/img/banner.jpg' %}" alt="Room Image" class="img-fluid">
+            </div>
+        </div>
+    </div>
+
+     <br> 
+
+     
+     <div class="container mt-5  ">
+        <div class="row">
+
+            <div class="col-md-8 offset-md-2">
+
+                <div class="hotel-details">
+                    <button id="openModalBtn" class="btn btn-primary position-absolute top-0 end-0 mr-2 mt-2 ">
+                        <i class="fas fa-star"></i> Top Rated
+                    </button>
+                    <h2 class="hotel-name">{{ room.room_name }}</h2>
+                    <h4 class="location">Location/Area: {{ room.category }}</h4>
+                    <p class="description">{{ room.desc }}</p>
+                    <div class="text-center">
+                        <p class="price">Price: ₹{{ room.price }} INR/-</p>
+                        <p class="room-type">Room Type: <span class="italic">{{ room.subcategory }}</span></p>
+                    </div>
+                    <div class="actions">
+                        <div class="action-btns">
+                            <a href="#" class="btn btn-primary enquire-btn">
+                                <i class="fas fa-envelope"></i> Enquire Now
+                            </a>
+                            <a href="{{ room.directions_link }}" class="btn btn-secondary directions-btn">
+                                <i class="fas fa-map-marker-alt"></i> Directions
+                            </a>
+                            <a href="/checkout" class="btn btn-primary checkout-btn">
+                                <i class="fas fa-shopping-cart"></i> Checkout
+                            </a>
+                            <a href="/" class="btn btn-primary home-btn">
+                                <i class="fas fa-home"></i> Back to Home
+                            </a>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+
+
+</div>
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="room-image">
+                <img src="/media/{{ room.image1 }}" alt="Room Image 1" class="img-fluid">
+                <div class="image-overlay">
+                    <div class="image-text"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="room-image">
+                <img src="/media/{{ room.image2 }}" alt="Room Image 2" class="img-fluid">
+                <div class="image-overlay">
+                    <div class="image-text"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="room-image">
+                <img src="/media/{{ room.image3 }}" alt="Room Image 3" class="img-fluid">
+                <div class="image-overlay">
+                    <div class="image-text"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="room-image">
+                <img src="/media/{{ room.image4 }}" alt="Room Image 4" class="img-fluid">
+                <div class="image-overlay">
+                    <div class="image-text"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="room-image">
+                <img src="/media/{{ room.image5 }}" alt="Room Image 5" class="img-fluid">
+                <div class="image-overlay">
+                    <div class="image-text"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="room-image">
+                <img src="/media/{{ room.image6 }}" alt="Room Image 6" class="img-fluid">
+                <div class="image-overlay">
+                    <div class="image-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-5" style="max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; border: 1px solid #ccc; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); border-radius: 5px;">
+
+        <!-- Display existing ratings -->
+        <h3 style="font-size: 24px; margin-bottom: 20px;">Rating & Reviews</h3>
+        <ul class="ratings-list" style="list-style: none; padding: 0;">
+            {% for rating in ratings %}
+            <li class="rating-item" style="margin-bottom: 20px; padding: 10px; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);">
+                <div class="user-rating">
+                    <span class="username" style="font-weight: bold; font-size: 16px; color: #333;">{{ rating.user.username }} (<span style="font-weight: bold; font-size: 16px; color: black;">{{ rating.rating }}</span>)</span>
+                    <p class="rating-date" style="font-size: 12px; color: #777;">{{ rating.created_at }}</p>
+                </div>
+                <p class="user-comment" style="margin-top: 10px; font-size: 14px; color: #333;">{{ rating.comment }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    
+        <!-- Display the form for submitting ratings -->
+        {% if user.is_authenticated %}
+        <div class="user-rating" style="margin-bottom: 20px; padding: 10px; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);">
+            {% if user_rating %}
+            <span class="username" style="font-weight: bold; font-size: 16px; color: #333;">{{ user.username }} (<span style="font-weight: bold; font-size: 16px; color: black;">{{ user_rating.rating }}</span>)</span>
+            <p class="rating-date" style="font-size: 12px; color: #777;">{{ user_rating.created_at }}</p>
+            <p class="user-comment" style="margin-top: 10px; font-size: 14px; color: #333;">{{ user_rating.comment }}</p>
+            {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">Submit Rating</button>
+            </form>
+            {% endif %}
+        </div>
+        {% else %}
+        <p style="font-size: 14px; color: #ff0000; margin-top: 10px;">You must be logged in to rate this room.</p>
+        {% endif %}
+    
+    </div>
+    
+    
+    
+    
+    
+    <br>
+
+</div>
+
+
+
+
+
+<style>
+    .room-image {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    .room-image img {
+        width: 100%;
+        height: 190px;
+    }
+    
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .room-image:hover .image-overlay {
+        opacity: 1;
+    }
+    
+    .image-text {
+        color: #fff;
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    .banner-image {
+        position: relative;
+        overflow: hidden;
+        background-color: #333;
+        height: 100%;
+        width: 100%;
+    }
+    
+    .banner-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    .hotel-details {
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hotel-details:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .hotel-name {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    
+    .location {
+        font-size: 18px;
+        color: #666;
+        margin-top: 0;
+        font-weight: bold;
+    }
+    
+    .description {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #444;
+        margin-top: 10px;
+    }
+    
+    .price {
+        font-size: 24px;
+        color: #e74c3c;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    
+    .room-type {
+        font-size: 18px;
+        font-style: italic;
+        margin-top: 10px;
+    }
+    
+    .actions {
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .action-btns {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    
+    .action-btns a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-right: 10px;
+        transition: background-color 0.3s ease-in-out;
+    }
+    
+    .action-btns a i {
+        margin-right: 5px;
+    }
+    
+    .checkout-btn {
+        background-color: #3498db;
+        color: #fff;
+    }
+    
+    .home-btn {
+        background-color: #2ecc71;
+        color: #fff;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .hotel-details {
+            padding: 15px;
+        }
+        .hotel-name {
+            font-size: 24px;
+        }
+        .location {
+            font-size: 16px;
+        }
+        .description {
+            font-size: 14px;
+        }
+        .price {
+            font-size: 20px;
+        }
+        .room-type {
+            font-size: 16px;
+        }
+        .enquire-btn {
+            font-size: 16px;
+        }
+        .action-btns a {
+            font-size: 16px;
+        }
+    }
+    
+    /* Button Hover Animation */
+    .enquire-btn:hover, .directions-btn:hover, .checkout-btn:hover, .home-btn:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Button Styles */
+    .enquire-btn, .directions-btn, .checkout-btn, .home-btn {
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        margin-right: 10px;
+        transition: background-color 0.3s ease-in-out;
+    }
+    
+    .enquire-btn {
+        background-color: #3498db;
+        color: #fff;
+    }
+    
+    .directions-btn {
+        background-color: #e67e22;
+        color: #fff;
+    }
+    
+    .directions-btn:hover {
+        background-color: #d35400;
+    }
+    
+    /* Style the "Provide Rating" button */
+    #openModalBtn {
+        background-color: #3498db; /* Blue background color */
+        color: #fff; /* White text color */
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+        margin-bottom: 20px; /* Add margin for spacing */
+    }
+    
+    #openModalBtn:hover {
+        background-color: #2980b9; /* Darker blue on hover */
+    }
+    
+    /* Responsive adjustments for the button */
+    @media (max-width: 768px) {
+        #openModalBtn {
+            font-size: 14px; /* Decrease font size on smaller screens */
+        }
+    }
+    
+    
+    
+</style>
+
+<!-- Add this JavaScript at the end of your room_detail.html file -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the modal element and buttons
+        var modal = document.getElementById('ratingModal');
+        var openModalBtn = document.getElementById('openModalBtn');
+        var closeModalBtn = document.getElementById('closeModalBtn');
+
+        // When the "Provide Rating" button is clicked, open the modal
+        openModalBtn.addEventListener('click', function () {
+            modal.style.display = 'block';
+        });
+
+        // When the close button or outside the modal is clicked, close the modal
+        closeModalBtn.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        // Close the modal if the user clicks anywhere outside the modal content
+        window.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+
+
+
+
+{% endblock body %}
+
+
+

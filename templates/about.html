@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}About Us{% endblock title %}
+{% block content %}
+
+
+
+<section id="hero">
+  <div class="hero-container">
+    <h3>Welcome to <strong>WorldXplorer</strong></h3>
+    <h1>Explore the world with WorldXplorer</h1>
+    <h2>Dear, {{user.username}} WorldXplorer Welcomes you ... </h2>
+    <a href="" class="btn-get-started scrollto">Browse Now</a>
+  </div>
+</section>
+
+{% endblock content %} 
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center">About Us</h1>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <p>Welcome to WorldXplorer, your trusted partner for hassle-free room bookings and unforgettable stays. With years of experience in the hospitality industry, we're dedicated to providing you with the perfect accommodations for your every need.</p>
+
+            <h2 class="text-center">Why Choose Us?</h2>
+            <ul>
+                <li>Offering a wide range of meticulously curated rooms and suites to suit your preferences and budget.</li>
+                <li>Providing you with the best rates and exclusive deals to make your stay both enjoyable and cost-effective.</li>
+                <li>Ensuring a seamless booking process, from selecting your room to checking in and out.</li>
+                <li>Delivering exceptional customer service that goes the extra mile to exceed your expectations.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+{% endblock body %}

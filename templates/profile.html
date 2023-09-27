@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %} User Profile {% endblock title %}
+
+{% block body %}
+<section id="profile" class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">User Profile Information</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Name:</strong> {{ user_profile.name }}</p>
+            <p><strong>Email:</strong> {{ user_profile.user.email }}</p>
+            <p><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
+            <p><strong>City:</strong> {{ user_profile.city }}</p>
+            <p><strong>State:</strong> {{ user_profile.state }}</p>
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <div class="card-header">
+            <h2 class="mb-0">User Orders</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Amount</th>
+                            <th>Bookings</th>
+                            <th>Address</th>
+                           
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in user_orders %}
+                        <tr>
+                            <td>{{ order.order_id }}</td>
+                            <td>	₹{{ order.amount }}</td>
+                            <td>
+                                <pre>{{ order.items_json|safe }}</pre>
+                            </td>
+                            <td> {{ order.city }}, {{ order.state }}, {{ order.zip_code }}</td>
+                            
+                            <td>
+                                <form method="post" action="{% url 'delete_booking' order.order_id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-5">
+        <div class="card-header">
+            <h2 class="mb-0">User Ratings</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Hotel Room</th>
+                            <th>Rating</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rating in user_ratings %}
+                        <tr>
+                            <td>{{ rating.room.room_name }}</td>
+                            <td>{{ rating.rating }}/5</td>
+                            <td>{{ rating.comment }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}
