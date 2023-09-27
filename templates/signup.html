@@ -9,18 +9,31 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endfor %}
-    <h3 class="text-dark">Signup</h3>
+    <h3 class="text-dark mb-4">Signup</h3>
     <form method="post">
         {% csrf_token %}
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="text" name="phone_number" placeholder="Phone Number" required>
-        <input type="text" name="city" placeholder="City" required>
-        <input type="text" name="state" placeholder="State" required>
-        <input type="password" name="pass1" placeholder="Password" required>
-        <input type="password" name="pass2" placeholder="Confirm Password" required>
-        <button type="submit">Sign Up</button>
+        <div class="mb-3">
+            <input type="email" class="form-control" name="email" placeholder="Email" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" name="name" placeholder="Name" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" name="phone_number" placeholder="Phone Number" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" name="city" placeholder="City" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" name="state" placeholder="State" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" name="pass1" placeholder="Password" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" name="pass2" placeholder="Confirm Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign Up</button>
     </form>
-    
 </div>
 {% endblock body %}
