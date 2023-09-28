@@ -50,28 +50,23 @@
           <li><a class="nav-link scrollto active" href="/">Home</a></li>
         
           <li><a class="nav-link scrollto" href="/about">About Us</a></li>
+          {% if request.user.is_authenticated %}
           <li><a class="nav-link scrollto" href="/checkout">Checkout</a></li>
           <li><a class="nav-link scrollto" href="/auth/profile/">My Profile<i class="fa-regular fa-square-user"></i> </a></li>
-
-          <button type="button" class="nav-link scrollto bg-danger p-3 m-2 text-white" id="popcart" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" ><i class="fa-solid fa-cart-shopping"></i>  Cart (<span id="cart">0</span>)
-          </button>
-
-
-          {% if request.user.is_authenticated %}
-          <li><a  class="nav-link scrollto" href="/auth/logout/">Logout <i class="fa-solid fa-right-from-bracket"></i>
-
-          
-          </a></li>
-          {% else %}
-          <li class="dropdown"><a href="#"><span>SignIn <i class="fa-solid fa-user"></i></span> <i class="bi bi-chevron-down"></i></a>
-
-            <ul>
-              <li><a href="/auth/signup/">Sign Up <i class="fa-solid fa-user"></i></a></li>
-              <li><a href="/auth/login/">Login</a></li>
-          
-            </ul>
-          </li>
+          {% if request.user.is_staff %}
+              <li><a class="nav-link scrollto bg-success p-3 m-2" href="/dashboard">Dashboard</a></li>
+              <li><a class="nav-link scrollto bg-warning p-3 m-2" href="/admin">Admin</a></li>
           {% endif %}
+          <li><button type="button" class="nav-link scrollto bg-danger p-3 m-2 text-white" id="popcart" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" ><i class="fa-solid fa-cart-shopping"></i>  Cart (<span id="cart">0</span>)</button></li>
+          <li><a class="nav-link scrollto" href="/auth/logout/">Logout <i class="fa-solid fa-right-from-bracket"></i></a></li>
+      {% else %}
+          <li class="dropdown"><a href="#"><span>SignIn <i class="fa-solid fa-user"></i></span> <i class="bi bi-chevron-down"></i></a>
+              <ul>
+                  <li><a href="/auth/signup/">Sign Up <i class="fa-solid fa-user"></i></a></li>
+                  <li><a href="/auth/login/">Login</a></li>
+              </ul>
+          </li>
+      {% endif %}
 
           <li><a class="nav-link scrollto bg-dark p-3 m-2" href="/contact">Contact <i class="fa-solid fa-message-middle"></i></a></li>
           

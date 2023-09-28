@@ -1,39 +1,63 @@
 {% extends 'base.html' %}
 {% block title %}Signup{% endblock title %}
+{% block content %}
 
+<section id="hero">
+  <div class="hero-container">
+    <h3>Welcome to <strong>WorldXplorer</strong></h3>
+    <h1>Explore the world with WorldXplorer</h1>
+    <h2>Dear user Please complete your Signup </h2>
+    <a href="" class="btn-get-started scrollto">Browse Now</a>
+  </div>
+</section>
+
+{% endblock content %} 
 {% block body %}
-<div class="card bg-light p-5">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        <strong>{{ message }}</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow p-5">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+               
+                {% endfor %}
+
+                <br>
+                <h3 class="text-dark mb-4">Sign Up Form</h3>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="email" class="form-control" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="name" placeholder="Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="phone_number" placeholder="Phone Number" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="city" placeholder="City" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="state" placeholder="State" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" name="pass1" placeholder="Password" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" name="pass2" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                    <br />
+                    <p>Already a User? <a href="/auth/login/">Login</a></p>
+             
+                </form>
+            </div>
+        </div>
     </div>
-    {% endfor %}
-    <h3 class="text-dark mb-4">Signup</h3>
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            <input type="email" class="form-control" name="email" placeholder="Email" required>
-        </div>
-        <div class="mb-3">
-            <input type="text" class="form-control" name="name" placeholder="Name" required>
-        </div>
-        <div class="mb-3">
-            <input type="text" class="form-control" name="phone_number" placeholder="Phone Number" required>
-        </div>
-        <div class="mb-3">
-            <input type="text" class="form-control" name="city" placeholder="City" required>
-        </div>
-        <div class="mb-3">
-            <input type="text" class="form-control" name="state" placeholder="State" required>
-        </div>
-        <div class="mb-3">
-            <input type="password" class="form-control" name="pass1" placeholder="Password" required>
-        </div>
-        <div class="mb-3">
-            <input type="password" class="form-control" name="pass2" placeholder="Confirm Password" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-    </form>
 </div>
 {% endblock body %}

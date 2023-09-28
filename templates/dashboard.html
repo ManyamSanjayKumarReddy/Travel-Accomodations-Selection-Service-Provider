@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+{% block content %}
+<section id="hero">
+    <div class="hero-container">
+        <h3>Welcome to <strong>WorldXplorer</strong></h3>
+        <h1>Explore the world with WorldXplorer</h1>
+        <h2>Dear, {{ user.username }} WorldXplorer Welcomes you ...</h2>
+        <a href="" class="btn-get-started scrollto">Browse Now</a>
+    </div>
+</section>
+{% endblock content %}
+
+{% block body %}
+<section id="dashboard" class="dashboard">
+    <div class="container">
+        <h1 class="section-title">Advanced Insight & Analytic Report  </h1>
+        <center><p>(Auto Generated when the details are updated from the admin/user)</p></center>
+       
+
+        <div class="table-container">
+            <table class="table table-bordered custom-table">
+                <thead>
+                    <tr>
+                        <th>Insights</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fas fa-users"></i> Total Users</td>
+                        <td>{{ total_users }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-star"></i> Total Reviews</td>
+                        <td>{{ total_reviews }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-chart-line"></i> Average Ratings</td>
+                        <td>{{ average_ratings }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-book"></i> Total Bookings</td>
+                        <td>{{ total_bookings }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-dollar-sign"></i> Total Revenue Generated</td>
+                        <td>₹{{ total_revenue }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight" style="background-color: #f7f7f7;">
+            <h2 style="font-family: 'Roboto', sans-serif;">Hotels Metric based on the Locations  </h2>
+            <table class="table table-bordered custom-table">
+                <thead>
+                    <tr>
+                        <th>Location</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for location in locations_highest_booking %}
+                        <tr>
+                            <td>{{ location.category }}</td>
+                            <td>{{ location.num_bookings }} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="insight" style="background-color: #f0f0f0; margin-top: 30px;">
+            <h2 style="font-family: 'Roboto', sans-serif;">Room Types Count Metric </h2>
+            <table class="table table-bordered custom-table">
+                <thead>
+                    <tr>
+                        <th>Room Type</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for room_type in room_types_highest_booking %}
+                        <tr>
+                            <td>{{ room_type.subcategory }}</td>
+                            <td>{{ room_type.num_bookings }} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="insight" style="background-color: #f7f7f7; margin-top: 30px;">
+            <h2 style="font-family: 'Roboto', sans-serif;">Metrics of the High Cost of Living Areas based on the Hotel Price</h2>
+            <table class="table table-bordered custom-table">
+                <thead>
+                    <tr>
+                        <th>Location</th>
+                        <th>Amount(₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for location in locations_more_sales %}
+                        <tr>
+                            <td>{{ location.category }}</td>
+                            <td>₹{{ location.total_sales }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="insight" style="background-color: #f0f0f0; margin-top: 20px;">
+            <h2 style="font-family: 'Roboto', sans-serif;">Metric on Cost of Room Types  </h2>
+            <table class="table table-bordered custom-table">
+                <thead>
+                    <tr>
+                        <th>Room Type</th>
+                        <th>Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for room_type in room_types_more_sales %}
+                        <tr>
+                            <td>{{ room_type.subcategory }}</td>
+                            <td>₹{{ room_type.total_sales }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+
+    </div>
+</section>
+
+<style>
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid #ccc;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    .custom-table th, .custom-table td {
+        border: 1px solid #ddd;
+        padding: 10px; /* Increase padding for better spacing */
+        text-align: left;
+        font-size: 16px; /* Increase font size for rows */
+        transition: background-color 0.3s;
+    }
+    
+    .custom-table th {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    .custom-table tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    
+    .custom-table tbody tr:nth-child(odd) {
+        background-color: #ffffff; /* Change the background color for odd rows */
+    }
+    
+    .custom-table tbody tr:hover {
+        background-color: #ddd;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    
+    .table-container::-webkit-scrollbar {
+        width: 12px;
+    }
+    
+    .table-container::-webkit-scrollbar-thumb {
+        background-color: #007bff;
+        border-radius: 10px;
+    }
+    
+    .table-container::-webkit-scrollbar-thumb:hover {
+        background-color: #0056b3;
+    }
+
+</style>
+
+{% endblock body %}

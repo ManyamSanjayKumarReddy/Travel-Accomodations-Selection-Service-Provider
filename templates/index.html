@@ -31,13 +31,57 @@
     </div>
     {% endfor %}
 
-    
     <div class="section-title">
       <h2>Location based Premium Accomodations</h2>
       <h3>Checkout our <span>Premium Rooms</span></h3>
     </div>
-
- 
+<br>
+    <div class="card bg-light p-3">
+      <h3 class="text-dark">Make your Choice Faster & Better using this awesome Filters </h3>
+      <br>
+      <form id="filter-form">
+          <div class="row g-3">
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="room-name-select">Hotel Name:</label>
+                      <select class="form-select" id="room-name-select" name="room_name">
+                          <option value="">All</option>
+                          {% for room_name in room_names %}
+                              <option value="{{ room_name }}" {% if selected_room_name == room_name %}selected{% endif %}>{{ room_name }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="category">Location:</label>
+                      <select class="form-select" id="category" name="category">
+                          <option value="">All</option>
+                          {% for category in categories %}
+                              <option value="{{ category }}">{{ category }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="subcategory">Room Type:</label>
+                      <select class="form-select" id="subcategory" name="subcategory">
+                          <option value="">All</option>
+                          {% for subcategory in subcategories %}
+                              <option value="{{ subcategory }}">{{ subcategory }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+              </div>
+          </div>
+          <br>
+          <div class="text-center">
+              <button type="submit" class="btn btn-primary">Apply Filters</button>
+          </div>
+      </form>
+  </div>
+ <br>
     {% for roomtype, range, nSlides in allRooms %}
 
 
@@ -196,6 +240,7 @@
   integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
   crossorigin="anonymous"
 ></script>
+
 
 <script>
   //find pout the card from local storage

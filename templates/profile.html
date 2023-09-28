@@ -34,11 +34,10 @@
 
     <div class="card mt-5">
         <div class="card-header">
-            <h2 class="mb-0">User Orders</h2>
+            <h2 class="mb-0">User Bookings</h2>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-               <!-- ... (previous code) ... -->
 
 <table class="table table-bordered">
     <thead>
@@ -66,12 +65,11 @@
                     {% csrf_token %}
                     <div class="d-flex flex-column align-items-start"> <!-- Use Bootstrap class for column layout and alignment -->
                         <input type="date" name="appointment_date" value="{{ order.appointment_date|date:'Y-m-d' }}" class="mb-2"> <!-- Add margin-bottom for spacing -->
-                        <button type="submit" class="btn btn-primary">Update Date</button>
+                        <button type="submit" class="btn btn-warning">Update Date</button>
                     </div>
                 </form>
             </td>
             <td>
-                <!-- Display the updated date here (initially empty) -->
                 {% if order.updated_appointment_date %}
                 {{ order.updated_appointment_date|date:'Y-m-d' }}
                 {% endif %}
@@ -79,7 +77,7 @@
             <td>
                 <form method="post" action="{% url 'delete_booking' order.order_id %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">Cancel</button>
                 </form>
             </td>
            

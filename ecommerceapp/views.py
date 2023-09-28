@@ -8,26 +8,62 @@ from django.views.decorators.csrf import  csrf_exempt
 from PayTm import Checksum
 from django.contrib.auth.decorators import login_required
 from .forms import RatingForm
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from django.shortcuts import redirect
 from datetime import datetime
+from django.contrib.auth.models import User
+from authapp.models import UserProfile
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse
+from django.db.models import Count
 
 # Create your views here.
 def index(request):
+    # Retrieve unique room names, categories, subcategories, and price ranges
+    room_names = RoomType.objects.values_list('room_name', flat=True).distinct()
+    categories = RoomType.objects.values_list('category', flat=True).distinct()
+    subcategories = RoomType.objects.values_list('subcategory', flat=True).distinct()
+
+    # Get filter parameters from the request
+    selected_room_name = request.GET.get('room_name')
+    selected_category = request.GET.get('category')
+    selected_subcategory = request.GET.get('subcategory')
+
+    # Apply filters to the RoomType queryset
+    rooms = RoomType.objects.all()
+
+    if selected_room_name:
+        rooms = rooms.filter(room_name=selected_room_name)
+
+    if selected_category:
+        rooms = rooms.filter(category=selected_category)
+
+    if selected_subcategory:
+        rooms = rooms.filter(subcategory=selected_subcategory)
+
+   
 
     allRooms = []
-    room_category = RoomType.objects.values('category','id')
-    # print(room_category)
+    room_category = rooms.values('category', 'id')
     categories = {item['category'] for item in room_category}
+
     for cat in categories:
-        prod= RoomType.objects.filter(category=cat)
-        n=len(prod)
+        prod = rooms.filter(category=cat)
+        n = len(prod)
         nSlides = n // 4 + ceil((n / 4) - (n // 4))
         allRooms.append([prod, range(1, nSlides), nSlides])
 
-    params= {'allRooms':allRooms}
+    params = {
+        'allRooms': allRooms,
+        'room_names': room_names,
+        'categories': categories,
+        'subcategories': subcategories,
+        'selected_room_name': selected_room_name,
+        'selected_category': selected_category,
+        'selected_subcategory': selected_subcategory,
+    }
 
-    return render(request,"index.html",params)
+    return render(request, "index.html", params)
 
 def room_detail(request, room_id):
     room = get_object_or_404(RoomType, id=room_id)
@@ -44,12 +80,10 @@ def contact(request):
         messages.info(request,"we will get back to you soon..")
         return render(request,"contact.html")
 
-
     return render(request,"contact.html")
 
 def about(request):
     return render(request,"about.html")
-
 
 
 def checkout(request):
@@ -239,4 +273,48 @@ def update_appointment_date(request, order_id):
             messages.error(request, 'You do not have permission to set the appointment date.')
 
     return redirect('/auth/profile/')
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
+
+@user_passes_test(is_admin)
+def dashboard(request):
+    # Calculate total users
+    total_users = User.objects.count()
+
+    # Calculate total reviews
+    total_reviews = Rating.objects.count()
+
+    # Calculate total ratings
+    average_ratings = Rating.objects.aggregate(total=Avg('rating'))['total']
+
+    # Calculate total bookings and revenue generated
+    total_bookings = Orders.objects.count()
+    total_revenue = Orders.objects.aggregate(total=Sum('amount'))['total']
+
+    # Calculate locations with the highest booking
+    locations_highest_booking = RoomType.objects.values('category').annotate(num_bookings=Count('category')).order_by('-num_bookings')[:5]
+
+    # Calculate room types with the highest booking
+    room_types_highest_booking = RoomType.objects.values('subcategory').annotate(num_bookings=Count('subcategory')).order_by('-num_bookings')[:5]
+
+    # Calculate locations with more number of sales
+    locations_more_sales = RoomType.objects.values('category').annotate(total_sales=Sum('price')).order_by('-total_sales')[:5]
+
+    # Calculate room types with more number of sales
+    room_types_more_sales = RoomType.objects.values('subcategory').annotate(total_sales=Sum('price')).order_by('-total_sales')[:5]
+
+    context = {
+        'total_users': total_users,
+        'total_reviews': total_reviews,
+        'average_ratings': average_ratings,
+        'total_bookings': total_bookings,
+        'total_revenue': total_revenue,
+        'locations_highest_booking': locations_highest_booking,
+        'room_types_highest_booking': room_types_highest_booking,
+        'locations_more_sales': locations_more_sales,
+        'room_types_more_sales': room_types_more_sales,
+    }
+
+    return render(request, 'dashboard.html', context)
 
