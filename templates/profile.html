@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% block title %} User Profile {% endblock title %}
+{% block content %}
 
+<section id="hero">
+  <div class="hero-container">
+    <h3>Welcome to <strong>WorldXplorer</strong></h3>
+    <h1>Explore the world with WorldXplorer</h1>
+    <h2>Dear, {{user.username}} WorldXplorer Welcomes you ...</h2>
+    <a href="" class="btn-get-started scrollto">Browse Now</a>
+  </div>
+</section>
+
+{% endblock content %}
 {% block body %}
 <section id="profile" class="container mt-5">
 
