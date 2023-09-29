@@ -6,3 +6,4 @@ class RatingForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}), required=False)
 
 
+ 
