@@ -130,3 +130,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MESSAGE_TAGS = {
     messages.ERROR:'danger'
 }
+
+RAZORPAY_API_KEY = 'rzp_test_0mnzKM05LcNo7I'
+RAZORPAY_API_SECRET = '385Nfk3BEZsWIiY1dKmDQxHn'

@@ -6,3 +6,4 @@ admin.site.register(RoomType)
 admin.site.register(Orders)
 admin.site.register(OrderUpdate)
 admin.site.register(Rating)
+

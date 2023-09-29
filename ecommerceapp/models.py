@@ -50,6 +50,9 @@ class Orders(models.Model):
     phone = models.CharField(max_length=100,default="")
     appointment_date = models.DateField(null=True, blank=True)
     updated_appointment_date = models.DateField(null=True, blank=True)
+    razorpay_order_id = models.CharField(max_length=255, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=255, blank=True, null=True)
+    payment_status = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
         return self.name
@@ -75,4 +78,3 @@ class Rating(models.Model):
     def __str__(self):
         return f"Rating {self.pk} for {self.room.room_name} by {self.user.username} ({self.rating})"
     
-

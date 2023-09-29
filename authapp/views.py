@@ -28,11 +28,9 @@ def signup(request):
         except User.DoesNotExist:
             pass
 
-        # Create a new user
         user = User.objects.create_user(email, email, password)
         user.save()
 
-        # Create a UserProfile and associate it with the user
         UserProfile.objects.create(user=user, name=name, phone_number=phone_number, city=city, state=state)
 
         messages.success(request, "Registration Successful")
@@ -67,19 +65,16 @@ def handlelogout(request):
 
 def user_profile_details(request):
     if request.user.is_authenticated:
-        # Get the user's profile from UserProfile model
+
         user_profile = UserProfile.objects.get(user=request.user)
 
-        # Get the user's orders from Orders model
         user_orders = Orders.objects.filter(email=request.user.email)
 
-        # Get order updates for each order
         order_updates = {}
         for order in user_orders:
             updates = OrderUpdate.objects.filter(order_id=order.order_id)
             order_updates[order] = updates
 
-        # Get user ratings from Rating model
         user_ratings = Rating.objects.filter(user=request.user)
 
         context = {
@@ -91,5 +86,4 @@ def user_profile_details(request):
 
         return render(request, 'profile.html', context)
     else:
-        # Handle the case when the user is not authenticated or logged in
         return render(request, 'login.html')

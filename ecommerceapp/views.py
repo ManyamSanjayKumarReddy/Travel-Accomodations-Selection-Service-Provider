@@ -2,34 +2,26 @@ from django.shortcuts import render,redirect, get_object_or_404
 from ecommerceapp.models import Contact,RoomType,OrderUpdate,Orders, Rating
 from django.contrib import messages
 from math import ceil
-from ecommerceapp import keys
-MERCHANT_KEY=keys.MK
-from django.views.decorators.csrf import  csrf_exempt
-from PayTm import Checksum
 from django.contrib.auth.decorators import login_required
 from .forms import RatingForm
 from django.db.models import Avg, Sum
 from django.shortcuts import redirect
 from datetime import datetime
 from django.contrib.auth.models import User
-from authapp.models import UserProfile
 from django.contrib.auth.decorators import user_passes_test
-from django.http import HttpResponse
 from django.db.models import Count
+
 
 # Create your views here.
 def index(request):
-    # Retrieve unique room names, categories, subcategories, and price ranges
     room_names = RoomType.objects.values_list('room_name', flat=True).distinct()
     categories = RoomType.objects.values_list('category', flat=True).distinct()
     subcategories = RoomType.objects.values_list('subcategory', flat=True).distinct()
 
-    # Get filter parameters from the request
     selected_room_name = request.GET.get('room_name')
     selected_category = request.GET.get('category')
     selected_subcategory = request.GET.get('subcategory')
 
-    # Apply filters to the RoomType queryset
     rooms = RoomType.objects.all()
 
     if selected_room_name:
@@ -42,7 +34,6 @@ def index(request):
         rooms = rooms.filter(subcategory=selected_subcategory)
 
    
-
     allRooms = []
     room_category = rooms.values('category', 'id')
     categories = {item['category'] for item in room_category}
@@ -108,83 +99,9 @@ def checkout(request):
         update = OrderUpdate(order_id=Order.order_id,update_desc="Room has been Confirmed")
         update.save()
         thank = True
-# # PAYMENT INTEGRATION
-
-        id = Order.order_id
-        oid=str(id)+"ShopyCart"
-        param_dict = {
-
-            'MID':keys.MID,
-            'ORDER_ID': oid,
-            'TXN_AMOUNT': str(amount),
-            'CUST_ID': email,
-            'INDUSTRY_TYPE_ID': 'Retail',
-            'WEBSITE': 'WEBSTAGING',
-            'CHANNEL_ID': 'WEB',
-            'CALLBACK_URL': 'http://127.0.0.1:8000/handlerequest/',
-
-        }
-        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
-        return render(request, 'paytm.html', {'param_dict': param_dict})
-
+        return redirect('https://rzp.io/l/svCKVZETSh')
+    
     return render(request, 'checkout.html')
-
-
-@csrf_exempt
-def handlerequest(request):
-    # paytm will send you post request here
-    form = request.POST
-    response_dict = {}
-    for i in form.keys():
-        response_dict[i] = form[i]
-        if i == 'CHECKSUMHASH':
-            checksum = form[i]
-
-    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
-    if verify:
-        if response_dict['RESPCODE'] == '01':
-            print('order successful')
-            a=response_dict['ORDERID']
-            b=response_dict['TXNAMOUNT']
-            rid=a.replace("ShopyCart","")
-           
-            print(rid)
-            filter2= Orders.objects.filter(order_id=rid)
-            print(filter2)
-            print(a,b)
-            for post1 in filter2:
-
-                post1.oid=a
-                post1.amountpaid=b
-                post1.paymentstatus="PAID"
-                post1.save()
-            print("run agede function")
-        else:
-            print('order was not successful because' + response_dict['RESPMSG'])
-    return render(request, 'paymentstatus.html', {'response': response_dict})
-
-
-def profile(request):
-    if not request.user.is_authenticated:
-        messages.warning(request,"Login & Try Again")
-        return redirect('/auth/login')
-    currentuser=request.user.username
-    items=Orders.objects.filter(email=currentuser)
-    rid=""
-    for i in items:
-        print(i.oid)
-        # print(i.order_id)
-        myid=i.oid
-        rid=myid.replace("ShopyCart","")
-        print(rid)
-    # status=OrderUpdate.objects.filter(order_id=int(rid))
-    # for j in status:
-    #     print(j.update_desc)
-
-   
-    context ={"items":items}
-    # print(currentuser)
-    return render(request,"profile.html",context)
 
 
 @login_required
@@ -214,18 +131,13 @@ def room_detail(request, room_id):
     else:
         form = RatingForm()
 
-    # Get all ratings for the room (excluding the user's own rating)
     ratings = Rating.objects.filter(room=room).exclude(user=request.user)
 
-    # Calculate the average rating for the room
     average_rating = Rating.objects.filter(room=room).aggregate(Avg('rating'))['rating__avg'] or 0
 
     if request.method == 'POST' and 'delete_rating' in request.POST:
-        # Check if the user has a rating and delete it
         if user_rating:
             user_rating.delete()
-
-            # Redirect to the same page after deleting the rating
             return redirect('room_detail', room_id=room_id)
 
     return render(request, 'room_detail.html', {'room': room, 'ratings': ratings, 'user_rating': user_rating, 'form': form, 'average_rating': average_rating})
@@ -233,12 +145,9 @@ def room_detail(request, room_id):
 
 def delete_booking(request, order_id):
     if request.method == 'POST':
-        # Fetch the order based on order_id
         order = get_object_or_404(Orders, order_id=order_id)
 
-        # Check if the order belongs to the current user (optional, for security)
         if order.email == request.user.email:
-            # Delete the order
             order.delete()
             messages.success(request, 'Booking deleted successfully.')
         else:
@@ -247,24 +156,17 @@ def delete_booking(request, order_id):
     return redirect('/auth/profile/')
 
 
-
-# In your ecommerceapp/views.py
-
 def update_appointment_date(request, order_id):
     if request.method == 'POST':
-        # Fetch the order based on order_id
         order = get_object_or_404(Orders, order_id=order_id)
 
-        # Check if the order belongs to the current user (optional, for security)
         if order.email == request.user.email:
-            # Get the appointment date from the form
             appointment_date_str = request.POST.get('appointment_date')
 
-            # Convert the date to the correct format (YYYY-MM-DD)
             try:
                 appointment_date = datetime.strptime(appointment_date_str, '%Y-%m-%d').date()
                 order.appointment_date = appointment_date
-                order.updated_appointment_date = appointment_date  # Update the updated_appointment_date field
+                order.updated_appointment_date = appointment_date  
                 order.save()
                 messages.success(request, 'Appointment date set successfully.')
             except ValueError:
@@ -279,29 +181,20 @@ def is_admin(user):
 
 @user_passes_test(is_admin)
 def dashboard(request):
-    # Calculate total users
+    
     total_users = User.objects.count()
-
-    # Calculate total reviews
     total_reviews = Rating.objects.count()
-
-    # Calculate total ratings
     average_ratings = Rating.objects.aggregate(total=Avg('rating'))['total']
 
-    # Calculate total bookings and revenue generated
     total_bookings = Orders.objects.count()
     total_revenue = Orders.objects.aggregate(total=Sum('amount'))['total']
 
-    # Calculate locations with the highest booking
     locations_highest_booking = RoomType.objects.values('category').annotate(num_bookings=Count('category')).order_by('-num_bookings')[:5]
 
-    # Calculate room types with the highest booking
     room_types_highest_booking = RoomType.objects.values('subcategory').annotate(num_bookings=Count('subcategory')).order_by('-num_bookings')[:5]
 
-    # Calculate locations with more number of sales
     locations_more_sales = RoomType.objects.values('category').annotate(total_sales=Sum('price')).order_by('-total_sales')[:5]
 
-    # Calculate room types with more number of sales
     room_types_more_sales = RoomType.objects.values('subcategory').annotate(total_sales=Sum('price')).order_by('-total_sales')[:5]
 
     context = {
