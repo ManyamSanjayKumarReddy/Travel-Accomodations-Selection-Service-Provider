@@ -6,58 +6,129 @@
   <div class="hero-container">
     <h3>Welcome to <strong>WorldXplorer</strong></h3>
     <h1>Explore the world with WorldXplorer</h1>
-    <h2>Dear user Please complete your Signup </h2>
+    <h2>Dear user, please complete your Signup</h2>
     <a href="" class="btn-get-started scrollto">Browse Now</a>
   </div>
 </section>
 
-{% endblock content %} 
+{% endblock content %}
 {% block body %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8 col-lg-6">
             <div class="card shadow p-5">
                 {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     <strong>{{ message }}</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-               
                 {% endfor %}
+                <h3 class="text-dark mb-4">WorldXplorer - SignUp</h3>
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Oops!</strong> There were some errors with your submission:
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                        <li>{{ field|capfirst }}: {{ error }}</li>
+                        {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
 
-                <br>
-                <h3 class="text-dark mb-4">Sign Up Form</h3>
-                
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <input type="email" class="form-control" name="email" placeholder="Email" required>
+                        <label for="email" class="form-label"><strong>*</strong> Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email Address" required >
+                        <small class="form-text text-muted small-font"><strong>Guideline:</strong> Enter a valid email address.</small>
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="name" placeholder="Name" required>
+                        <label for="name" class="form-label"><strong>*</strong> Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Your Full Name" required >
+                        <small class="form-text text-muted small-font"><strong>Guideline:</strong> Enter your full name.</small>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col">
+                            <label for="phone_number" class="form-label"><strong>*</strong> Phone Number</label>
+                            <input type="tel" pattern="[0-9]{10}" class="form-control" id="phone_number" name="phone_number" placeholder="Enter Your Phone Number" required>
+                            <small class="form-text text-muted small-font"><strong>Guideline:</strong> Enter your 10-digit phone number.</small>
+                        </div>
+                        <div class="mb-3 col">
+                            <label for="age" class="form-label"><strong>*</strong> Age</label>
+                            <input type="number" class="form-control" id="age" name="age" placeholder="Enter Your Age" required >
+                            <small class="form-text text-muted small-font"><strong>Guideline:</strong> Enter your age.</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col">
+                            <label for="city" class="form-label"><strong>*</strong> City</label>
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Enter Your City" required >
+                            <small class="form-text text-muted small-font"><strong>Guideline:</strong> Enter your city.</small>
+                        </div>
+                        <div class="mb-3 col">
+                            <label for="state" class="form-label"><strong>*</strong> State</label>
+                            <input type="text" class="form-control" id="state" name="state" placeholder="Enter Your State" required >
+                            <small class="form-text text-muted small-font"><strong>Guideline:</strong> Enter your state.</small>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="phone_number" placeholder="Phone Number" required>
+                        <label for="detailed_address" class="form-label"><strong>*</strong> Detailed Address</label>
+                        <textarea class="form-control" id="detailed_address" name="detailed_address" placeholder="Enter Your Detailed Address" required></textarea>
+                        <small class="form-text text-muted small-font"><strong>Guideline:</strong> Enter your detailed address.</small>
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="city" placeholder="City" required>
+                        <label for="id_proof" class="form-label"><strong>*</strong> ID Proof</label>
+                        <select class="form-select" id="id_proof" name="id_proof" required>
+                            <option value="Aadhar Card">Aadhar Card</option>
+                            <option value="Pancard">Pancard</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <small class="form-text text-muted small-font"><strong>Guideline:</strong> Select your ID proof type.</small>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col">
+                            <label for="id_proof_upload" class="form-label"><strong>*</strong> ID Proof Upload</label>
+                            <input type="file" class="form-control" id="id_proof_upload" name="id_proof_upload" accept="image/*,application/pdf" required>
+                            <small class="form-text text-muted small-font"><strong>Guideline:</strong> Upload a valid ID proof in JPG, PNG, or PDF format (max 10MB).</small>
+                        </div>  
+                        <div class="mb-3 col">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" class="form-control" id="country" name="country" value="India" readonly>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="state" placeholder="State" required>
+                        <label for="pass1" class="form-label"><strong>*</strong> Password</label>
+                        <input type="password" class="form-control" id="pass1" name="pass1" placeholder="Your Password" required>
+                        <small class="form-text text-muted small-font"><strong>Guideline:</strong> Choose a strong password. (Min length of 8 & Max of 14 along with mix of characters and number along with special characters)</small>
                     </div>
                     <div class="mb-3">
-                        <input type="password" class="form-control" name="pass1" placeholder="Password" required>
+                        <label for="pass2" class="form-label"><strong>*</strong> Confirm Password</label>
+                        <input type="password" class="form-control" id="pass2" name="pass2" placeholder="Re-Enter your Password" required>
+                        <small class="form-text text-muted small-font"><strong>Guideline:</strong> Enter the password again.</small>
                     </div>
-                    <div class="mb-3">
-                        <input type="password" class="form-control" name="pass2" placeholder="Confirm Password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                    <button type="submit" class="btn btn-primary btn-block animated-button">Sign Up</button>
                     <br />
                     <p>Already a User? <a href="/auth/login/">Login</a></p>
-             
                 </form>
             </div>
-        </div>
+        </div>  
     </div>
 </div>
+<style>
+    /* Custom CSS styles */
+    .small-font {
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .animated-button {
+        background-color: #007bff;
+        color: #fff;
+        transition: background-color 0.3s ease-in-out;
+    }
+    .animated-button:hover {
+        background-color: #0056b3;
+    }
+</style>
 {% endblock body %}

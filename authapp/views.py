@@ -1,42 +1,46 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from authapp.models import UserProfile
 from ecommerceapp.models import Orders, OrderUpdate, Rating
 from django.core.exceptions import ObjectDoesNotExist
-
+from .forms import SignupForm
 
 def signup(request):
     if request.method == "POST":
-        email = request.POST['email']
-        name = request.POST['name']
-        phone_number = request.POST['phone_number']
-        city = request.POST['city']
-        state = request.POST['state']
-        password = request.POST['pass1']
-        confirm_password = request.POST['pass2']
+        form = SignupForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Form data is valid, create the user and profile
+            email = form.cleaned_data['email']
+            name = form.cleaned_data['name']
+            phone_number = form.cleaned_data['phone_number']
+            city = form.cleaned_data['city']
+            state = form.cleaned_data['state']
+            age = form.cleaned_data['age']
+            detailed_address = form.cleaned_data['detailed_address']
+            id_proof = form.cleaned_data['id_proof']
+            id_proof_upload = form.cleaned_data['id_proof_upload']
+            country = form.cleaned_data['country']
+            password = form.cleaned_data['pass1']
 
-        if password != confirm_password:
-            messages.warning(request, "Password is Not Matching")
-            return render(request, 'signup.html')
+            # Check for existing email (this is also done in the form, but it doesn't hurt to check again)
+            if User.objects.filter(username=email).exists():
+                messages.error(request, "Email is already taken")
+            else:
+                # Create the User and UserProfile
+                user = User.objects.create_user(email, email, password)
+                user.save()
+                profile = UserProfile.objects.create(user=user, name=name, phone_number=phone_number, city=city, state=state, age=age, detailed_address=detailed_address, id_proof=id_proof, id_proof_upload=id_proof_upload, country=country)
 
-        try:
-            if User.objects.get(username=email):
-                messages.info(request, "Email is Taken")
-                return render(request, 'signup.html')
-        except User.DoesNotExist:
-            pass
+                # Log the user in and redirect
+                login(request, user)
+                messages.success(request, "Registration Successful")
+                return redirect('/auth/login/')
+    else:
+        form = SignupForm()
 
-        user = User.objects.create_user(email, email, password)
-        user.save()
-
-        UserProfile.objects.create(user=user, name=name, phone_number=phone_number, city=city, state=state)
-
-        messages.success(request, "Registration Successful")
-        return redirect('/auth/login/')
-    
-    return render(request, "signup.html")
+    return render(request, "signup.html", {'form': form})
 
 
 def handlelogin(request):
