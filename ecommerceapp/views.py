@@ -18,6 +18,7 @@ def index(request):
     categories = RoomType.objects.values_list('category', flat=True).distinct()
     subcategories = RoomType.objects.values_list('subcategory', flat=True).distinct()
 
+
     selected_room_name = request.GET.get('room_name')
     selected_category = request.GET.get('category')
     selected_subcategory = request.GET.get('subcategory')
@@ -51,7 +52,7 @@ def index(request):
         'subcategories': subcategories,
         'selected_room_name': selected_room_name,
         'selected_category': selected_category,
-        'selected_subcategory': selected_subcategory,
+        'selected_subcategory': selected_subcategory, 
     }
 
     return render(request, "index.html", params)

@@ -62,6 +62,33 @@
                         <p class="price">Price: ₹{{ room.price }} INR/-</p>
                         <p class="room-type">Room Type: <span class="italic">{{ room.subcategory }}</span></p>
                     </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="facilities text-center">
+                                <h4 class="facilities-header">Facilities</h4>
+                                <div class="facilities-icons">
+                                    {% if room.has_food_facility %}
+                                    <i class="fas fa-utensils text-success fa-2x"></i>
+                                    {% endif %}
+                                    {% if room.has_swimming_pool %}
+                                    <i class="fas fa-swimmer text-success fa-2x"></i>
+                                    {% endif %}
+                                    {% if room.near_airport %}
+                                    <i class="fas fa-plane text-success fa-2x"></i>
+                                    {% endif %}
+                                    {% if room.sea_area %}
+                                    <i class="fas fa-water text-success fa-2x"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="vacancies text-center">
+                                <h4 class="vacancies-header">Vacancies</h4>
+                                <h4 class="vacancies-count">{{ room.vacancies }}</h4>
+                            </div>
+                        </div>
+                    </div>
                     <div class="actions">
                         <div class="action-btns">
                             <a href="#" class="btn btn-primary enquire-btn">
@@ -191,6 +218,22 @@
 
 
 <style>
+
+    .facilities-header,
+    .vacancies-header {
+        font-size: 24px;
+        color: #333;
+    }
+
+    .facilities-icons .fa-2x {
+        font-size: 36px;
+        margin-right: 10px;
+    }
+
+    .vacancies-count {
+        font-size: 36px;
+        color: #e74c3c;
+    }
     .room-image {
         position: relative;
         overflow: hidden;

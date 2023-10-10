@@ -95,52 +95,99 @@
     </div>
 
    
-    <div class="container">
-      <div class="row">
-        {% for i in roomtype %}
-        <div class="col-md-3 mt-3">
-          <img
-            src="/media/{{i.image}}"
-            class="card-img-top"
-            alt="not found"
-            height="200px"
-            width="150px"
-          />
-          <div class="card-body">
-            <h5 class="card-title mt-2" id="namepr{{i.id}}">
-              {{i.room_name}}
-            </h5>
-            {% comment %}
-            <p class="card-text">{{i.desc|slice:"0:53"}}...</p>
-            {% endcomment %}
-            <br />
-            <h6 class="card-title mb-3">
-              Price: ₹<span id="pricepr{{i.id}}">{{i.price}}</span> INR/-
-            </h6>
+  <div class="container">
 
-            <h6 class="card-title mb-3">
-              Room Type :<span id="pricepr{{i.id}}"> {{i.subcategory}}</span>
-            </h6>
-            <span id="divpr{{i.id}}" class="divpr">
-              <button id="pr{{i.id}}" class="btn btn-danger cart btn-sm mt-0">
-                Book Now <i class="fa-solid fa-cart-shopping"></i>
-              </button>
-            </span>
+    <style>
+  /* Custom CSS for styling the "Not Available" message */
+  .not-available-alert {
+    position: absolute;
+    top: 10px; /* Add some top margin */
+    right: 10px; /* Move it to the top-right corner */
+    background-color: rgba(255, 0, 0, 0.8); /* Red with transparency */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease-in-out;
+  }
 
-            <a href="{% url 'room_detail' i.id %}">
-              <button class="btn btn-dark btn-sm cart">
-                  View Details <i class="fa-solid fa-eye"></i>
-              </button>
-          </a>
+  /* Hover effect to change background color */
+  .image-container:hover .not-available-alert {
+    background-color: rgba(255, 0, 0, 1); /* Fully opaque red on hover */
+  }
+</style>
 
-          </div>
-
-         
-        </div>
-
-        {% endfor %}
-      </div>
+<div class="row">
+  {% for i in roomtype %}
+  <div class="col-md-3 mt-3">
+    <div class="image-container position-relative">
+      <!-- Check if vacancies are 0 and display an alert -->
+      {% if i.vacancies == 0 %}
+        <div class="not-available-alert">Not Available</div>
+      {% endif %}
+      <img
+        src="/media/{{ i.image }}"
+        class="card-img-top"
+        alt="not found"
+        height="200px"
+        width="150px"
+      />
     </div>
+    <div class="card-body">
+      <h5 class="card-title mt-2" id="namepr{{ i.id }}">
+        {{ i.room_name }}
+      </h5>
+      <!-- Add the new fields here -->
+      <p class="card-text mt-2">
+        No. of Vacancies: {{ i.vacancies }}
+      </p>
+      <p class="card-text">
+        Facilities:
+        {% if i.has_food_facility %}
+        <i class="fas fa-utensils text-success"></i>
+        {% endif %}
+        {% if i.has_swimming_pool %}
+        <i class="fas fa-swimmer text-success"></i>
+        {% endif %}
+        {% if i.near_airport %}
+        <i class="fas fa-plane text-success"></i>
+        {% endif %}
+        {% if i.sea_area %}
+        <i class="fas fa-water text-success"></i>
+        {% endif %}
+      </p>
+      <!-- End of displaying new fields -->
+      <h6 class="card-title mb-3">
+        Price: ₹<span id="pricepr{{ i.id }}">{{ i.price }}</span> INR/-
+      </h6>
+      <h6 class="card-title mb-3">
+        Room Type: <span id="pricepr{{ i.id }}">{{ i.subcategory }}</span>
+      </h6>
+      <span id="divpr{{ i.id }}" class="divpr">
+        {% if i.vacancies > 0 %}
+          <button id="pr{{ i.id }}" class="btn btn-danger cart btn-sm mt-0">
+            Book Now <i class="fa-solid fa-cart-shopping"></i>
+          </button>
+        {% else %}
+          <button class="btn btn-dark btn-sm cart" disabled>
+            Check Later
+          </button>
+        {% endif %}
+      </span>
+      <a href="{% url 'room_detail' i.id %}">
+        <button class="btn btn-dark btn-sm cart">
+          View Details <i class="fa-solid fa-eye"></i>
+        </button>
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+  </div>
+
+
     {% endfor %}
 
     
