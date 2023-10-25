@@ -38,8 +38,15 @@
             <p><strong>Name:</strong> {{ user_profile.name }}</p>
             <p><strong>Email:</strong> {{ user_profile.user.email }}</p>
             <p><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
-            <p><strong>City:</strong> {{ user_profile.city }}</p>
+            <p><strong>Age:</strong> {{ user_profile.age }}</p>
+            <p><strong>Detailed Address:</strong> {{ user_profile.detailed_address }}</p>
+            <p><strong>Identification Proof:</strong> {{ user_profile.get_id_proof_display }}</p>
+            {% if user_profile.id_proof_upload %}
+            <p><strong>ID Proof Upload:</strong> <a href="{{ user_profile.id_proof_upload.url }}">{{ user_profile.id_proof_upload.name }}</a></p>
+            {% endif %}
+            <p><strong>Country:</strong> {{ user_profile.country }}</p>
             <p><strong>State:</strong> {{ user_profile.state }}</p>
+            <p><strong>City:</strong> {{ user_profile.city }}</p>
         </div>
     </div>
 
@@ -57,7 +64,7 @@
             <th>Amount</th>
             <th>Bookings</th>
             <th>Address</th>
-            <th>Date</th>
+            <th>Checkin Date</th>
             <th>Updated Date</th>
             <th>Action</th>
         </tr>
@@ -74,15 +81,15 @@
             <td>
                 <form method="post" action="{% url 'update_appointment_date' order.order_id %}">
                     {% csrf_token %}
-                    <div class="d-flex flex-column align-items-start"> <!-- Use Bootstrap class for column layout and alignment -->
-                        <input type="date" name="appointment_date" value="{{ order.appointment_date|date:'Y-m-d' }}" class="mb-2"> <!-- Add margin-bottom for spacing -->
+                    <div class="d-flex flex-column align-items-start"> 
+                        <input type="date" name="appointment_date" value="{{ order.appointment_date|date:'Y-m-d' }}" class="mb-2"> 
                         <button type="submit" class="btn btn-warning">Update Date</button>
                     </div>
                 </form>
             </td>
             <td>
                 {% if order.updated_appointment_date %}
-                {{ order.updated_appointment_date|date:'Y-m-d' }}
+                {{ order.updated_appointment_date|date:'d-m-Y' }}
                 {% endif %}
             </td>
             <td>
@@ -95,9 +102,8 @@
         </tr>
         {% endfor %}
     </tbody>
-</table>
+</table>    
 
-<!-- ... (remaining code) ... -->
 
             </div>
         </div>

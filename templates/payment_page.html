@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Payment
+{% endblock title %}
+
+{% block content %}
+<section id="hero">
+  <div class="hero-container">
+    <h3>Welcome to <strong>WorldXplorer</strong></h3>
+    <h1>Explore the world with WorldXplorer</h1>
+    <h2>Dear, {{ user.username }}, WorldXplorer Welcomes you ... </h2>
+    <a href="#" class="btn-get-started scrollto">Browse Now</a>
+  </div>
+</section>
+{% endblock content %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Payment Details</h2>
+          <p><strong>Name:</strong> {{ order.name }}</p>
+          <p><strong>Email:</strong> {{ order.email }}</p>
+          <p><strong>Mobile:</strong> +91 {{ order.mobile }}</p>
+          <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+          <p><strong>Amount:</strong>  ₹ {{ order.amount }} INR/-</p>
+
+          <form action="/process_payment/" method="POST">
+            {% csrf_token %}
+            <script
+              src="https://checkout.razorpay.com/v1/checkout.js"
+              data-key="rzp_test_0mnzKM05LcNo7I"
+              data-amount="{{ order.amount }}"
+              data-currency="INR"
+              data-order_id="{{ order.razorpay_order_id }}"
+              data-buttontext="Pay with Razorpay"
+              data-name="WorldXplorer Payment"
+              data-description="Complete the Payment for the confirmation of your Room"
+              data-image="{% static 'assets/img/explore.avif' %}"
+              data-prefill.name="{{ order.name }}"
+              data-prefill.email ="{{ order.email }}"
+              data-prefill.contact ="{{ order.mobile }}"
+              data-theme.color = "#3399cc"
+            >
+            </script>
+          </form>
+
+          <a href="/" class="btn btn-primary mt-3">Return to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}

@@ -11,6 +11,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Count
 from django.db import transaction
+from django.conf import settings
+from razorpay import Client
+from django.http import HttpResponse
+from .models import Orders
 
 
 # Create your views here.
@@ -81,14 +85,14 @@ def about(request):
 @login_required
 def checkout(request):
     if request.method == "POST":
-       
         items_json = request.POST.get('itemsJson', '')
-        amount = request.POST.get('amt')
+        amount = int(request.POST.get('amt'))
+        # amount = 500
         id_proof = request.FILES.get('id_proof', None) 
 
         order_data = {
             'items_json': items_json,
-            'amount': amount,
+            'amount': amount ,
             'name': request.POST.get('name', ''),
             'email': request.POST.get('email', ''),
             'address1': request.POST.get('address', ''),
@@ -103,19 +107,50 @@ def checkout(request):
             'mobile': request.POST.get('phone', ''),
         }
 
-     
         with transaction.atomic():
             order = Orders(**order_data)
 
             if id_proof:
                 order.id_proof = id_proof  
 
-            order.save() 
+            order.save()
 
-        thank = True  
-        return redirect('http://127.0.0.1:8000/auth/profile/')  
+            client = Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            data = {
+                'amount': amount * 100,
+                'currency': 'INR',
+                'receipt': f"order_{order.order_id}",
+                'payment_capture': 1
+            }
+            razorpay_order = client.order.create(data=data)
+
+            order.razorpay_order_id = razorpay_order['id']
+            order.save()
+
+        return render(request, 'payment_page.html', {'order': order, 'razorpay_order': razorpay_order})
 
     return render(request, 'checkout.html')
+
+
+def process_payment(request):
+    if request.method == 'POST':
+        razorpay_payment_id = request.POST.get('razorpay_payment_id', '')
+        razorpay_order_id = request.POST.get('razorpay_order_id', '')
+        razorpay_signature = request.POST.get('razorpay_signature', '')
+        try:
+            # If the payment is successfully verified, update the database
+            order = Orders.objects.get(razorpay_order_id=razorpay_order_id)
+            order.payment_status = 'Paid'  
+            order.save()
+            return redirect('/auth/profile/')
+
+        except Orders.DoesNotExist:
+            return HttpResponse("Order not found. Payment cannot be processed.")
+
+        except Exception as e:
+            return HttpResponse(f"An error occurred: {str(e)}")
+
+    return HttpResponse("Invalid request method. Please try again.")
 
 
 @login_required

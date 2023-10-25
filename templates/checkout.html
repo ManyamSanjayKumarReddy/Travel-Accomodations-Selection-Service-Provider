@@ -63,6 +63,10 @@ Check Out
           <input type="hidden" id="amt" name="amt">
           <table class="table table-bordered">
             <tr>
+              <!-- <td>Amount:</td>
+              <td>
+                <input type="text" class="form-control" id="amt" name="amt" value="{{ order.amount }}" disabled>
+              </td> -->
               <td>Name:</td>
               <td>
                 <input type="text" class="form-control" id="name" name="name" placeholder="Enter your Name" required>
@@ -75,7 +79,7 @@ Check Out
             <tr>
               <td>Email:</td>
               <td>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your Email" value="{{user.email}}" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your Email" value="{{user.email}}" disabled required>
               </td>
               <td>Age:</td>
               <td>
@@ -128,8 +132,6 @@ Check Out
                 <input type="file" class="form-control" id="id_proof" name="id_proof" required>
               </td>
             </tr>
-
-            
           </table>
            
 
@@ -155,8 +157,11 @@ Check Out
   </div>
 </div>
           <button id="btn" type="submit" class="btn btn-success btn-sm btn-block col-md-4">Confirm Booking</button>
+
+         
         </form>
         
+            
       </div>
     </div>
     
@@ -179,6 +184,7 @@ Check Out
 
   </div>
 
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
    
  <script src="https://code.jquery.com/jquery-3.3.1.js"
  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -274,11 +280,7 @@ if (quantity > 1) {
   `);
 }
 
-{% if thank %}
-alert('Thanks for Booking with us. Your order is is {{id}}. Use it to track your manage your Bookings');
-localStorage.clear();
-document.location = "/";
-{% endif %}
+
 
 var test = `${totalPrice}`;
 document.getElementById("amt").value = test;
