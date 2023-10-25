@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from ecommerceapp.models import Contact,RoomType,OrderUpdate,Orders, Rating
+from ecommerceapp.models import Contact,RoomType,Orders, Rating
 from django.contrib import messages
 from math import ceil
 from django.contrib.auth.decorators import login_required
@@ -10,6 +10,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Count
+from django.db import transaction
 
 
 # Create your views here.
@@ -77,31 +78,43 @@ def contact(request):
 def about(request):
     return render(request,"about.html")
 
-
+@login_required
 def checkout(request):
-    if not request.user.is_authenticated:
-        messages.warning(request,"Login & Try Again")
-        return redirect('/auth/login')
-
-    if request.method=="POST":
+    if request.method == "POST":
+       
         items_json = request.POST.get('itemsJson', '')
-        name = request.POST.get('name', '')
         amount = request.POST.get('amt')
-        email = request.POST.get('email', '')
-        address1 = request.POST.get('address1', '')
-        address2 = request.POST.get('address2','')
-        city = request.POST.get('city', '')
-        state = request.POST.get('state', '')
-        zip_code = request.POST.get('zip_code', '')
-        phone = request.POST.get('phone', '')
-        Order = Orders(items_json=items_json,name=name,amount=amount, email=email, address1=address1,address2=address2,city=city,state=state,zip_code=zip_code,phone=phone)
-        print(amount)
-        Order.save()
-        update = OrderUpdate(order_id=Order.order_id,update_desc="Room has been Confirmed")
-        update.save()
-        thank = True
-        return redirect('https://rzp.io/l/svCKVZETSh')
-    
+        id_proof = request.FILES.get('id_proof', None) 
+
+        order_data = {
+            'items_json': items_json,
+            'amount': amount,
+            'name': request.POST.get('name', ''),
+            'email': request.POST.get('email', ''),
+            'address1': request.POST.get('address', ''),
+            'city': request.POST.get('city', ''),
+            'state': request.POST.get('state', ''),
+            'zip_code': request.POST.get('pincode', ''),
+            'appointment_date': request.POST.get('checkin_date', ''),
+            'updated_appointment_date': request.POST.get('checkout_date', ''),
+            'age': request.POST.get('age', ''),
+            'aadhar': request.POST.get('aadhar', ''),
+            'country': request.POST.get('country', ''),
+            'mobile': request.POST.get('phone', ''),
+        }
+
+     
+        with transaction.atomic():
+            order = Orders(**order_data)
+
+            if id_proof:
+                order.id_proof = id_proof  
+
+            order.save() 
+
+        thank = True  
+        return redirect('http://127.0.0.1:8000/auth/profile/')  
+
     return render(request, 'checkout.html')
 
 

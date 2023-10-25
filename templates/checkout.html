@@ -3,8 +3,6 @@
 Check Out
 {% endblock title %} 
 {% block content %}
-
-
 <section id="hero">
   <div class="hero-container">
     <h3>Welcome to <strong>WorldXplorer</strong></h3>
@@ -13,7 +11,6 @@ Check Out
     <a href="" class="btn-get-started scrollto">Browse Now</a>
   </div>
 </section>
-
 {% endblock content %} 
 {% block body %} 
 {% load static %}
@@ -22,7 +19,6 @@ Check Out
 <section id="portfolio" class="portfolio">
   <div class="container">
     {% for message in messages %}
-
     <div
       class="alert alert-{{message.tags}} alert-dismissible fade show"
       role="alert"
@@ -42,79 +38,147 @@ Check Out
       <h3>Checkout Page </h3>
     </div>
 
-       
-       
-       <div class="container">
-           <div class="col my-4">
-               <h2>Step 1 - My Awesome Cart Express Checkout - Review Your Booking Details</h2>
-               <div class="my-4">
-                   <ul class="list-group" id="items">
+    <div class="container">
+      <div class="col my-4">
+        <h2>Step 1 - My Awesome Cart Express Checkout - Review Your Booking Details</h2>
+        <div class="my-4">
+          <ul class="list-group" id="items">
+            <!-- Items will be dynamically added here -->
+          </ul>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mt-3">
+              <li class="breadcrumb-item active" aria-current="page">
+                Your Cart Total Is <b>Rs. <span id="totalprice"></span> <span id="amount"></span></b>.
+                Enter your details below & Confirm your Booking. Thanks for using WorldXplorer Accommodations Site
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col my-4">
+        <h2>Step 2 - Enter Address & Other Details:</h2>
+        <form method="post" action="/checkout/">
+          {% csrf_token %}
+          <input type="hidden" name="itemsJson" id="itemsJson">
+          <input type="hidden" id="amt" name="amt">
+          <table class="table table-bordered">
+            <tr>
+              <td>Name:</td>
+              <td>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your Name" required>
+              </td>
+              <td>Phone Number:</td>
+              <td>
+                <input type="number" class="form-control" id="phone" name="phone" placeholder="Enter your Phone Number" required>
+              </td>
+            </tr>
+            <tr>
+              <td>Email:</td>
+              <td>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your Email" value="{{user.email}}" required>
+              </td>
+              <td>Age:</td>
+              <td>
+                <input type="number" class="form-control" id="age" name="age" placeholder="Enter your Age" required>
+              </td>
+            </tr>
+            <tr>
+              <td>Aadhar Number:</td>
+              <td>
+                <input type="text" class="form-control" id="aadhar" name="aadhar" placeholder="Enter your Aadhar Number" required>
+              </td>
+              <td>Detailed Address:</td>
+              <td>
+                <input type="text" class="form-control" id="address" name="address" placeholder="Enter Detailed Address" required>
+              </td>
+            </tr>
+            <tr>
+              <td>State:</td>
+              <td>
+                <input type="text" class="form-control" id="state" name="state" placeholder="Enter your State" required>
+              </td>
+              <td>Country:</td>
+              <td>
+                <input type="text" class="form-control" id="country" name="country" placeholder="Enter your Country" required>
+              </td>
+            </tr>
+            <tr>
+              <td>City:</td>
+              <td>
+                <input type="text" class="form-control" id="city" name="city" placeholder="Enter your City" required>
+              </td>
+              <td>Pin Code:</td>
+              <td>
+                <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter your Pin Code" required>
+              </td>
+            </tr>
+            <tr>
+              <td>Check-in Date:</td>
+              <td>
+                <input type="date" class="form-control" id="checkin_date" name="checkin_date" required>
+              </td>
+              <td>Check-out Date:</td>
+              <td>
+                <input type="date" class="form-control" id="checkout_date" name="checkout_date" required>
+              </td>
+            </tr>
+            <tr>
+              <td>Upload ID Proof:</td>
+              <td colspan="3">
+                <input type="file" class="form-control" id="id_proof" name="id_proof" required>
+              </td>
+            </tr>
 
-
-                   </ul>
-
-                   <nav aria-label="breadcrumb">
-         <ol class="breadcrumb mt-3">
-           <li class="breadcrumb-item active" aria-current="page">Your Cart Total Is <b>Rs. <span id="totalprice"></span> <span id="amount"></span></b>. Enter your details below & Conform your Booking. Thanks for using WorldXplorer Accomodations Site</li>
-           <li</li>
-         </ol>
-       </nav>
-       
-               </div>
-           </div>
-           <div class="col my-4">
-               <h2>Step 2 - Enter Address & Other Details:</h2>
-               <form method="post" action="/checkout/">
-                {% csrf_token %}
-                <input type="hidden" name="itemsJson" id="itemsJson">
-                <input type="hidden" id="amt" name="amt">
-                <table class="table table-bordered">
-                    <tr>
-                        <td>Name:</td>
-                        <td>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your Name" required>
-                        </td>
-                        <td>Email:</td>
-                        <td>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{user.email}}" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Address Line 1:</td>
-                        <td>
-                            <input type="text" class="form-control" id="address1" name="address1" placeholder="Enter your Address Line 1" required>
-                        </td>
-                        <td>Address Line 2:</td>
-                        <td>
-                            <input type="text" class="form-control" id="address2" name="address2" placeholder="Enter your Address Line 2" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>City:</td>
-                        <td>
-                            <input type="text" class="form-control" id="city" name="city" placeholder="Enter your City Name" required>
-                        </td>
-                        <td>State:</td>
-                        <td>
-                            <input type="text" class="form-control" id="state" name="state" placeholder="Enter your State Name" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Pin Code:</td>
-                        <td>
-                            <input type="number" class="form-control" id="zip_code" name="zip_code" required placeholder="Enter your Pin Code">
-                        </td>
-                        <td>Phone Number:</td>
-                        <td>
-                            <input type="number" class="form-control" id="phone" name="phone" required placeholder="Enter your Mobile Number">
-                        </td>
-                    </tr>
-                </table>
-                <button id="btn" type="submit" class="btn btn-success btn-sm btn-block col-md-4">Confirm Booking</button>
-            </form>
             
-           </div>
-       </div>
+          </table>
+           
+
+<div id="member-details">
+  <h3>Other Member Details:</h3>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+          <th>Age</th>
+          <th>Aadhar Number</th>
+          <th>Detailed Address</th>
+          <th>Upload ID Proof</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Member fields will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
+</div>
+          <button id="btn" type="submit" class="btn btn-success btn-sm btn-block col-md-4">Confirm Booking</button>
+        </form>
+        
+      </div>
+    </div>
+    
+    <!-- Display the item count with custom styling -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <button type="button" class="btn btn-warning">
+            <strong>
+              Please Enter valid Details for
+              <span id="cart-count">0</span>
+              Member(s)
+            </strong>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
    
  <script src="https://code.jquery.com/jquery-3.3.1.js"
  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -122,7 +186,7 @@ Check Out
    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
-
+<!-- JavaScript to handle member fields based on quantity -->
 <script>
 if (localStorage.getItem('cart') == null) {
    var cart = {};
@@ -153,13 +217,62 @@ if ($.isEmptyObject(cart)) {
        $('#items').append(mystr);
    }
    document.getElementById('totalprice').innerHTML=totalPrice
-
 }
+
 document.getElementById('totalprice').innerHTML = totalPrice;
 
 $('#itemsJson').val(JSON.stringify(cart));
 
+// Update the item count
+function updateCartCount() {
+  var itemCount = sum; // Use the 'sum' variable to get the total quantity
+  document.getElementById('cart-count').innerHTML = itemCount;
+}
 
+// Call the updateCartCount function to initialize the item count
+updateCartCount();
+
+// Get the quantity from localStorage
+var quantity = sum;
+
+// Function to dynamically create member fields in table rows
+function createMemberFields(quantity) {
+  var memberFields = "";
+  for (var i = 1; i < quantity; i++) {
+    memberFields += `
+      <tr>
+        <td><input type="text" class="form-control" name="name${i}" placeholder="Enter Name" required></td>
+        <td><input type="number" class="form-control" name="phone${i}" placeholder="Enter Phone Number" required></td>
+        <td><input type="email" class="form-control" name="email${i}" placeholder="Enter Email" required></td>
+        <td><input type="number" class="form-control" name="age${i}" placeholder="Enter Age" required></td>
+        <td><input type="text" class="form-control" name="aadhar${i}" placeholder="Enter Aadhar Number" required></td>
+        <td><input type="text" class="form-control" name="address${i}" placeholder="Enter Detailed Address" required></td>
+        <td><input type="file" class="form-control" name="id_proof${i}" required></td>
+      </tr>
+    `;
+  }
+  return memberFields;
+}
+
+// Check if quantity is greater than 1
+if (quantity > 1) {
+  // Show fields for multiple members in a table
+  var memberFieldsHTML = createMemberFields(quantity);
+  $("#member-details tbody").html(memberFieldsHTML);
+} else {
+  // Show fields for a single member (additional fields)
+  $("#member-details tbody").html(`
+    <tr>
+      <td><input type="text" class="form-control" name="name" placeholder="Enter Name" required></td>
+      <td><input type="number" class="form-control" name="phone" placeholder="Enter Phone Number" required></td>
+      <td><input type="email" class="form-control" name="email" placeholder="Enter Email" required></td>
+      <td><input type="number" class="form-control" name="age" placeholder="Enter Age" required></td>
+      <td><input type="text" class="form-control" name="aadhar" placeholder="Enter Aadhar Number" required></td>
+      <td><input type="text" class="form-control" name="address" placeholder="Enter Detailed Address" required></td>
+      <td><input type="file" class="form-control" name="id_proof" required></td>
+    </tr>
+  `);
+}
 
 {% if thank %}
 alert('Thanks for Booking with us. Your order is is {{id}}. Use it to track your manage your Bookings');
@@ -169,6 +282,7 @@ document.location = "/";
 
 var test = `${totalPrice}`;
 document.getElementById("amt").value = test;
+
 </script>
 
 {% endblock body %}

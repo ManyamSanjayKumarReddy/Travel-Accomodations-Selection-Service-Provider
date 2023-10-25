@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from authapp.models import UserProfile
-from ecommerceapp.models import Orders, OrderUpdate, Rating
+from ecommerceapp.models import Orders, Rating
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import SignupForm
 
@@ -74,17 +74,11 @@ def user_profile_details(request):
 
         user_orders = Orders.objects.filter(email=request.user.email)
 
-        order_updates = {}
-        for order in user_orders:
-            updates = OrderUpdate.objects.filter(order_id=order.order_id)
-            order_updates[order] = updates
-
         user_ratings = Rating.objects.filter(user=request.user)
 
         context = {
             'user_profile': user_profile,
             'user_orders': user_orders,
-            'order_updates': order_updates,
             'user_ratings': user_ratings,
         }
 
